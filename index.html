@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Moodle Linker 📎</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; line-height: 1.6; }
+        .bookmarklet {
+            display: inline-block;
+            padding: 15px 25px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: move; /* Shows the user they can drag it */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        code { background: #eee; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>Moodle Linker 📎</h1>
+    <p>Arrossega aquest botó a la teva barra de marcadors:</p>
+    
+    <a class="bookmarklet" href="javascript:(function(){if(document.getElementById('links-extractor-container'))return;let showH=false;const getL=()=>{const a=Array.from(document.querySelectorAll('a.aalink')).map(l=>{const p=l.closest('.activity-item');const h=p&&p.classList.contains('hiddenactivity');const s=l.querySelector('.instancename');return{text:(s?s.firstChild.textContent:l.textContent).trim(),url:l.href,hidden:h}}).filter(i=>i.url&&!i.url.includes(%27#'));const m=new Map();a.forEach(i=>{if(!showH&&i.hidden)return;if(!m.has(i.url))m.set(i.url,i)});return Array.from(m.values())};let links=getL();const c=document.createElement('div');c.id='links-extractor-container';c.style.cssText='position:fixed;top:20px;right:20px;z-index:2147483647;background:white;border:2px solid #333;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-family:Arial,sans-serif;width:350px;display:flex;flex-direction:column;max-height:80vh;';const h=document.createElement('div');h.style.cssText='padding:10px;background:#333;color:white;font-weight:bold;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;';const closeBtn=document.createElement('button');closeBtn.textContent='✕';closeBtn.style.cssText='background:#f44;color:white;border:none;padding:2px 8px;cursor:pointer;border-radius:3px;';closeBtn.onclick=()=>c.remove();const titleSpan=document.createElement('span');titleSpan.id='lnc';h.appendChild(titleSpan);h.appendChild(closeBtn);const ctrl=document.createElement('div');ctrl.style.cssText='display:flex;flex-direction:column;background:#eee;flex-shrink:0;';const row=document.createElement('div');row.style.cssText='display:flex;';const s=document.createElement('input');s.placeholder='Filtra...';s.style.cssText='flex:1;padding:10px;border:none;outline:none;background:transparent;';const b=document.createElement('button');b.textContent='Obrir tots';b.style.cssText='padding:0 12px;background:#28a745;color:white;border:none;cursor:pointer;font-weight:bold;';const optRow=document.createElement('div');optRow.style.cssText='padding:5px 10px;font-size:11px;display:flex;align-items:center;gap:10px;background:#e0e0e0;';const chk=document.createElement('input');chk.type='checkbox';chk.id='chkH';chk.style.marginRight='5px';const lbl=document.createElement('label');lbl.htmlFor='chkH';lbl.textContent='Mostra activitats ocultes';const dlBtn=document.createElement('button');dlBtn.textContent='⬇ TXT';dlBtn.style.cssText='margin-left:auto;padding:2px 8px;background:#555;color:white;border:none;border-radius:3px;cursor:pointer;font-size:11px;';dlBtn.onclick=()=>{const term=s.value.toLowerCase();const filtered=links.filter(i=>i.text.toLowerCase().includes(term));const maxLen=Math.max(...filtered.map(i=>i.text.length));const content=filtered.map(i=>i.text.padEnd(maxLen+4)+i.url).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));a.download='moodle-links.txt';a.click();URL.revokeObjectURL(a.href)};optRow.appendChild(chk);optRow.appendChild(lbl);optRow.appendChild(dlBtn);row.appendChild(s);row.appendChild(b);ctrl.appendChild(row);ctrl.appendChild(optRow);const list=document.createElement('div');list.id='lnklist';list.style.cssText='overflow-y:auto;background:white;border-radius:0 0 8px 8px;';const render=()=>{const term=s.value.toLowerCase();const filtered=links.filter(i=>i.text.toLowerCase().includes(term));list.innerHTML='';filtered.forEach(i=>{const div=document.createElement('div');div.textContent=i.text;div.title=i.text;div.style.cssText='padding:8px 12px;border-bottom:1px solid #eee;cursor:pointer;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'+(i.hidden?'background:#f0f0f0;color:#888;font-style:italic;':'');div.onmouseover=()=>div.style.background=i.hidden?'#e4e4e4':'#f0f7ff';div.onmouseout=()=>div.style.background=i.hidden?'#f0f0f0':'white';div.onclick=()=>window.open(i.url,'_blank');list.appendChild(div)});titleSpan.textContent=filtered.length+'/'+links.length;b.onclick=()=>filtered.forEach(i=>window.open(i.url,'_blank'))};chk.onchange=(e)=>{showH=e.target.checked;links=getL();render()};s.addEventListener('input',render);c.appendChild(h);c.appendChild(ctrl);c.appendChild(list);document.body.appendChild(c);render();s.focus();})();">Moodle Linker 📎</a>
+    
+    <p><small>Un cop afegit, ves al teu curs de Moodle i clica el marcador.</small></p>
+</body>
+</html>
